@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Summary: Codable {
+public struct Summary: Codable {
     let domainsBeingBlocked, dnsQueriesToday, adsBlockedToday: Int
     let adsPercentageToday: Double
     let uniqueDomains, queriesForwarded, queriesCached, clientsEverSeen: Int
@@ -40,7 +40,7 @@ struct Summary: Codable {
 
 // MARK: - GravityLastUpdated
 
-struct GravityLastUpdated: Codable {
+public struct GravityLastUpdated: Codable {
     let fileExists: Bool
     let absolute: Int
     let relative: Relative
@@ -54,6 +54,6 @@ struct GravityLastUpdated: Codable {
 
 // MARK: - Relative
 
-struct Relative: Codable {
+public struct Relative: Codable {
     let days, hours, minutes: String
 }
