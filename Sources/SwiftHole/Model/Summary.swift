@@ -8,13 +8,13 @@
 import Foundation
 
 public struct Summary: Codable {
-    let domainsBeingBlocked, dnsQueriesToday, adsBlockedToday: Int
-    let adsPercentageToday: Double
-    let uniqueDomains, queriesForwarded, queriesCached, clientsEverSeen: Int
-    let uniqueClients, dnsQueriesAllTypes, replyNODATA, replyNXDOMAIN: Int
-    let replyCNAME, replyIP, privacyLevel: Int
-    let status: String
-    let gravityLastUpdated: GravityLastUpdated
+    public let domainsBeingBlocked, dnsQueriesToday, adsBlockedToday: Int
+    public let adsPercentageToday: Double
+    public let uniqueDomains, queriesForwarded, queriesCached, clientsEverSeen: Int
+    public let uniqueClients, dnsQueriesAllTypes, replyNODATA, replyNXDOMAIN: Int
+    public let replyCNAME, replyIP, privacyLevel: Int
+    public let status: String
+    public let gravityLastUpdated: GravityLastUpdated
 
     enum CodingKeys: String, CodingKey {
         case domainsBeingBlocked = "domains_being_blocked"
@@ -41,13 +41,13 @@ public struct Summary: Codable {
 // MARK: - GravityLastUpdated
 
 public struct GravityLastUpdated: Codable {
-    let fileExists: Bool
-    let absolute: Int
-    let relative: Relative
+    public let fileExists: Bool
+    public let absolute: Int
+    public let relative: Relative
 
     enum CodingKeys: String, CodingKey {
-        case fileExists = "file_exists"
-        case absolute, relative
+        public case fileExists = "file_exists"
+        public case absolute, relative
     }
 }
 
@@ -55,5 +55,5 @@ public struct GravityLastUpdated: Codable {
 // MARK: - Relative
 
 public struct Relative: Codable {
-    let days, hours, minutes: String
+    public let days, hours, minutes: String
 }
