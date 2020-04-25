@@ -7,11 +7,6 @@
 
 import Foundation
 
-internal struct Environment {
-    let apiToken = ""
-    let host = ""
-}
-
 internal enum Router {
     case getSummary
     case getLogs
