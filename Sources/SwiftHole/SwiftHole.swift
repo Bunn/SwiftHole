@@ -1,3 +1,7 @@
-struct SwiftHole {
-    var text = "Hello, World!"
+public struct SwiftHole {
+    
+    func fetchSummary(completion: @escaping (Result<Summary, Error>) -> ()) {
+        Service().request(router: .getSummary, completion: completion)
+    }
+    
 }
