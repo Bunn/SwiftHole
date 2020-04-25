@@ -46,8 +46,8 @@ public struct GravityLastUpdated: Codable {
     public let relative: Relative
 
     enum CodingKeys: String, CodingKey {
-        public case fileExists = "file_exists"
-        public case absolute, relative
+        case fileExists = "file_exists"
+        case absolute, relative
     }
 }
 
