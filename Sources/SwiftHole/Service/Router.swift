@@ -8,8 +8,8 @@
 import Foundation
 
 internal enum Router {
-    case getSummary
-    case getLogs
+    case getSummary(Environment)
+    case getLogs(Environment)
     
     var scheme: String {
         switch self {
@@ -20,8 +20,8 @@ internal enum Router {
     
     var host: String {
         switch self {
-        case .getSummary, .getLogs:
-            return Environment().host
+        case .getSummary(let environment), .getLogs (let environment):
+            return environment.host
         }
     }
     
@@ -40,13 +40,12 @@ internal enum Router {
     }
     
     var parameters: [URLQueryItem] {
-        let token = Environment().apiToken
         switch self {
         case .getSummary:
             return []
-        case .getLogs:
+        case .getLogs (let environment):
             return [URLQueryItem(name: "getAllQueries", value: "100"),
-                    URLQueryItem(name: "auth", value: token)]
+                    URLQueryItem(name: "auth", value: environment.apiToken ?? "")]
         }
     }
 }

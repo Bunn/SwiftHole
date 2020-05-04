@@ -8,15 +8,6 @@
 import Foundation
 
 internal struct Environment {
-    private static let hostKey = "swiftHole-hostKey"
-    
-    var apiToken = ""
-    
-    var host: String {
-        UserDefaults.standard.string(forKey: Environment.hostKey) ?? ""
-    }
-    
-    func saveHost(_ host: String) {
-        UserDefaults.standard.set(host, forKey: Environment.hostKey)
-    }
+    var host: String
+    var apiToken: String?
 }

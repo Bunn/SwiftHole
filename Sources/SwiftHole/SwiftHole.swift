@@ -1,17 +1,13 @@
 public struct SwiftHole {
-
-    public var host: String {
-        set {
-            Environment().saveHost(newValue)
-        }
-        get {
-            Environment().host
-        }
+    let environment: Environment
+    let service = Service()
+    
+    public init(host: String, apiToken: String? = nil) {
+        environment = Environment(host: host, apiToken: apiToken)
     }
-    public init() {}
 
     public func fetchSummary(completion: @escaping (Result<Summary, Error>) -> ()) {
-        Service().request(router: .getSummary, completion: completion)
+        service.request(router: .getSummary(environment), completion: completion)
     }
     
 }
