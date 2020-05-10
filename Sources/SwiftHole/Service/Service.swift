@@ -8,7 +8,48 @@
 import Foundation
 
 internal struct Service {
-
+    
+    
+    // MARK: Public Methods
+    
+    func request(router: Router, completion: @escaping (Result<Void, SwiftHoleError>) -> ()) {
+        runDataTask(with: router) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            } else {
+                completion(.success(()))
+                return
+                
+            }
+        }
+    }
+    
+    func request<T: Codable>(router: Router, completion: @escaping (Result<T, SwiftHoleError>) -> ()) {
+        runDataTask(with: router) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let data = data else {
+                completion(.failure(.invalidResponse))
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                let responseObject = try decoder.decode(T.self, from: data)
+                completion(.success(responseObject))
+            } catch {
+                completion(.failure(.invalidDecode(error)))
+            }
+        }
+    }
+    
+    
+    // MARK: Private Methods
+    
     private func URLForRouter(_ router: Router) -> URL? {
         var components = URLComponents()
         components.scheme = router.scheme
@@ -21,65 +62,35 @@ internal struct Service {
         return url
     }
     
-    func request(router: Router, completion: @escaping (Result<Void, SwiftHoleError>) -> ()) {
+    private func runDataTask(with router: Router, completionHandler: @escaping (Data?, URLResponse?, SwiftHoleError?) -> Void) {
         guard let url = URLForRouter(router) else {
-            completion(.failure(.malformedURL))
+            completionHandler(nil, nil, SwiftHoleError.malformedURL)
             return
         }
         
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = router.method
-        
         let session = URLSession(configuration: .default)
-        let dataTask = session.dataTask(with: urlRequest) { data, response, error in
+        let dataTask = session.dataTask(with: urlRequest, completionHandler: { data, response, error in
             if let error = error {
-                completion(.failure(.sessionError(error)))
+                completionHandler(nil, nil, .sessionError(error))
                 return
             }
             
             if let response = response as? HTTPURLResponse {
                 if 200 ..< 300 ~= response.statusCode {
-                    completion(.success(()))
+                    completionHandler(data, response, nil)
                     return
                 } else {
-                    completion(.failure(.invalidResponseCode(response.statusCode)))
+                    completionHandler(data, response, .invalidResponseCode(response.statusCode))
                     return
                 }
             } else {
-                completion(.failure(.invalidResponse))
-            }
-
-        }
-        dataTask.resume()
-    }
-    
-    func request<T: Codable>(router: Router, completion: @escaping (Result<T, SwiftHoleError>) -> ()) {
-        guard let url = URLForRouter(router) else {
-            completion(.failure(.malformedURL))
-            return
-        }
-        
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = router.method
-        
-        let session = URLSession(configuration: .default)
-        let dataTask = session.dataTask(with: urlRequest) { data, response, error in
-            if let error = error {
-                completion(.failure(.sessionError(error)))
+                completionHandler(data, response, .invalidResponse)
                 return
             }
-            
-            guard response != nil else { return }
-            guard let data = data else { return }
-            
-            do {
-                let decoder = JSONDecoder()
-                let responseObject = try decoder.decode(T.self, from: data)
-                completion(.success(responseObject))
-            } catch {
-                completion(.failure(.invalidDecode(error)))
-            }
-        }
+        })
+        
         dataTask.resume()
     }
 }

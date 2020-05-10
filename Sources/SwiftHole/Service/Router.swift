@@ -58,7 +58,6 @@ internal enum Router {
         case .disable(let environment, let seconds):
             return [URLQueryItem(name: "disable", value: "\(seconds)"),
                     URLQueryItem(name: "auth", value: environment.apiToken ?? "")]
-
         }
     }
 }

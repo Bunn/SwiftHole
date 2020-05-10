@@ -1,7 +1,7 @@
 
 public struct SwiftHole {
-    let environment: Environment
-    let service = Service()
+    private let environment: Environment
+    private let service = Service()
     
     public init(host: String, apiToken: String? = nil) {
         environment = Environment(host: host, apiToken: apiToken)
@@ -16,6 +16,18 @@ public struct SwiftHole {
             completion(.failure(.noAPITokenProvided))
             return
         }
-        service.request(router: .disable(environment, 10), completion: completion)
+     
+        service.request(router: .disable(environment, seconds)) { (result: Result<Status, SwiftHoleError>) in
+            switch result {
+            case .success(let status):
+                if status.isEnabled == false {
+                    completion(.success(()))
+                } else {
+                    completion(.failure(.invalidResponse))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
 }
