@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Summary.swift
+//
 //
 //  Created by Fernando Bunn on 25/04/2020.
 //
@@ -55,5 +55,5 @@ public struct GravityLastUpdated: Codable {
 // MARK: - Relative
 
 public struct Relative: Codable {
-    public let days, hours, minutes: String
+    public let days, hours, minutes: Int
 }
