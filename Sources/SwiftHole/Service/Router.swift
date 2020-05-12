@@ -11,12 +11,14 @@ internal enum Router {
     case getSummary(Environment)
     case getLogs(Environment)
     case disable(Environment, Int)
+    case enable(Environment)
     
     var scheme: String {
         switch self {
         case .getSummary,
              .getLogs,
-             .disable:
+             .disable,
+             .enable:
             return "http"
         }
     }
@@ -25,7 +27,8 @@ internal enum Router {
         switch self {
         case .getSummary(let environment),
              .getLogs (let environment),
-             .disable(let environment, _):
+             .disable(let environment, _),
+             .enable (let environment):
             return environment.host
         }
     }
@@ -34,7 +37,8 @@ internal enum Router {
         switch self {
         case .getSummary,
              .getLogs,
-             .disable:
+             .disable,
+             .enable:
             return "/admin/api.php"
         }
     }
@@ -43,7 +47,8 @@ internal enum Router {
         switch self {
         case .getSummary,
              .getLogs,
-             .disable:
+             .disable,
+             .enable:
             return "GET"
         }
     }
@@ -52,12 +57,18 @@ internal enum Router {
         switch self {
         case .getSummary:
             return []
+            
         case .getLogs (let environment):
             return [URLQueryItem(name: "getAllQueries", value: "100"),
                     URLQueryItem(name: "auth", value: environment.apiToken ?? "")]
+            
         case .disable(let environment, let seconds):
-            return [URLQueryItem(name: "disable", value: "\(seconds)"),
-                    URLQueryItem(name: "auth", value: environment.apiToken ?? "")]
+            return [URLQueryItem(name: "auth", value: environment.apiToken ?? ""),
+                    URLQueryItem(name: "disable", value: "\(seconds)")]
+            
+        case .enable(let environment):
+            return [URLQueryItem(name: "auth", value: environment.apiToken ?? ""),
+                    URLQueryItem(name: "enable", value: "")]
         }
     }
 }
