@@ -13,5 +13,6 @@ public enum SwiftHoleError: Error {
     case sessionError(Error)
     case invalidResponseCode(Int)
     case invalidResponse
+    case invalidAPIToken
     case invalidDecode(Error)
 }

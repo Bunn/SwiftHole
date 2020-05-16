@@ -1,8 +1,16 @@
 
+private enum EnableDisableMethodType {
+    case enable
+    case disable
+}
+
 public struct SwiftHole {
     private let environment: Environment
     private let service = Service()
     
+    
+    // MARK: Public Methods
+
     public init(host: String, apiToken: String? = nil) {
         environment = Environment(host: host, apiToken: apiToken)
     }
@@ -18,16 +26,7 @@ public struct SwiftHole {
         }
         
         service.request(router: .enable(environment)) { (result: Result<Status, SwiftHoleError>) in
-            switch result {
-            case .success(let status):
-                if status.isEnabled == true {
-                    completion(.success(()))
-                } else {
-                    completion(.failure(.invalidResponse))
-                }
-            case .failure(let error):
-                completion(.failure(error))
-            }
+            self.handleEnableDisableMethod(type: .enable, result: result, completion: completion)
         }
     }
     
@@ -39,15 +38,34 @@ public struct SwiftHole {
         }
         
         service.request(router: .disable(environment, seconds)) { (result: Result<Status, SwiftHoleError>) in
-            switch result {
-            case .success(let status):
-                if status.isEnabled == false {
-                    completion(.success(()))
-                } else {
-                    completion(.failure(.invalidResponse))
-                }
-            case .failure(let error):
+            self.handleEnableDisableMethod(type: .disable, result: result, completion: completion)
+        }
+    }
+    
+
+    // MARK: Private Methods
+
+    private func handleEnableDisableMethod(type: EnableDisableMethodType, result: Result<Status, SwiftHoleError>, completion: @escaping (Result<Void, SwiftHoleError>) -> ()) {
+             
+        switch result {
+        case .success(let status):
+            if (type == .disable && status.isEnabled == false) ||
+                (type == .enable && status.isEnabled == true) {
+                completion(.success(()))
+            } else {
+                completion(.failure(.invalidResponse))
+            }
+        case .failure(let error):
+            switch error {
+            case .invalidDecode(_):
+                /* the server returns a 200 even if the API Token is wrong
+                 but it doesn't return anything to decode, so it's safe to assume there's
+                 an issue with the API token here
+                 */
+                completion(.failure(.invalidAPIToken))
+            default:
                 completion(.failure(error))
+                
             }
         }
     }
