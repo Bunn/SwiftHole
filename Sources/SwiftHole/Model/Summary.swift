@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Summary: Codable {
+public struct Summary: Decodable {
     public let domainsBeingBlocked, dnsQueriesToday, adsBlockedToday: Int
     public let adsPercentageToday: Double
     public let uniqueDomains, queriesForwarded, queriesCached, clientsEverSeen: Int
@@ -40,7 +40,7 @@ public struct Summary: Codable {
 
 // MARK: - GravityLastUpdated
 
-public struct GravityLastUpdated: Codable {
+public struct GravityLastUpdated: Decodable {
     public let fileExists: Bool
     public let absolute: Int
     public let relative: Relative
@@ -54,6 +54,29 @@ public struct GravityLastUpdated: Codable {
 
 // MARK: - Relative
 
-public struct Relative: Codable {
-    public let days, hours, minutes: Int
+public struct Relative: Decodable {
+    public var days, hours, minutes: Int
+    
+    enum CodingKeys: String, CodingKey {
+          case days
+          case hours
+          case minutes
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        /*
+         Pi-hole 4.x used Strings for these values
+         whereas 5.x uses Int, so we try to decode both
+         */
+        do {
+            days = Int(try values.decode(String.self, forKey: .days)) ?? 0
+            hours = Int(try values.decode(String.self, forKey: .hours)) ?? 0
+            minutes = Int(try values.decode(String.self, forKey: .minutes)) ?? 0
+        } catch {
+            days = try values.decode(Int.self, forKey: .days)
+            hours = try values.decode(Int.self, forKey: .hours)
+            minutes = try values.decode(Int.self, forKey: .minutes)
+        }
+    }
 }

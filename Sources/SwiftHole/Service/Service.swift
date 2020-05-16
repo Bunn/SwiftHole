@@ -25,7 +25,7 @@ internal struct Service {
         }
     }
     
-    func request<T: Codable>(router: Router, completion: @escaping (Result<T, SwiftHoleError>) -> ()) {
+    func request<T: Decodable>(router: Router, completion: @escaping (Result<T, SwiftHoleError>) -> ()) {
         runDataTask(with: router) { data, response, error in
             if let error = error {
                 completion(.failure(error))

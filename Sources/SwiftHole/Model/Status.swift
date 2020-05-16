@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal struct Status: Codable {
+internal struct Status: Decodable {
     let status: String
     var isEnabled: Bool {
         return status.lowercased() == "enabled"
