@@ -56,7 +56,7 @@ SwiftHole.init(host: "192.168.1.123", apiToken: "klaatubaradanikto")
             print("enabled")
                 
         case .failure(let error):
-        print("Error \(error)")
+            print("Error \(error)")
     }
 }
 ```
