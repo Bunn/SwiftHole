@@ -11,8 +11,8 @@ public struct SwiftHole {
     
     // MARK: Public Methods
 
-    public init(host: String, apiToken: String? = nil) {
-        environment = Environment(host: host, apiToken: apiToken)
+    public init(host: String, port: Int? = nil, apiToken: String? = nil) {
+        environment = Environment(host: host, port: port, apiToken: apiToken)
     }
     
     public func fetchSummary(completion: @escaping (Result<Summary, SwiftHoleError>) -> ()) {

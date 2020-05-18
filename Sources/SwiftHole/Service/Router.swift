@@ -42,6 +42,16 @@ internal enum Router {
             return "/admin/api.php"
         }
     }
+
+    var port: Int? {
+        switch self {
+        case .getSummary(let environment),
+             .getLogs (let environment),
+             .disable(let environment, _),
+             .enable (let environment):
+            return environment.port        
+        }
+    }
     
     var method: String {
         switch self {
