@@ -9,5 +9,6 @@ import Foundation
 
 internal struct Environment {
     var host: String
+    var port: Int?
     var apiToken: String?
 }
