@@ -9,18 +9,18 @@ import Foundation
 
 public struct DNSRequest {
     let date: Date
-    let adsCount: Int
-    let requestCount: Int
+    public let adsCount: Int
+    public let requestCount: Int
     
-    var startDate: Date {
+    public var startDate: Date {
          date - TimeInterval(300)
     }
     
-    var endDate: Date {
+    public var endDate: Date {
         date + TimeInterval(299)
     }
     
-    var permittedRequests: Int {
+    public var permittedRequests: Int {
         requestCount - adsCount
     }
 }

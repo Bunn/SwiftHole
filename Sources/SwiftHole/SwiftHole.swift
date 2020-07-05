@@ -42,8 +42,15 @@ public struct SwiftHole {
         }
     }
     
-    public func fetchHistoricalQueries(completion: @escaping (Result<Summary, SwiftHoleError>) -> ()) {
-        service.request(router: .getHistoricalQueries(environment), completion: completion)
+    public func fetchHistoricalQueries(completion: @escaping (Result<[DNSRequest], SwiftHoleError>) -> ()) {
+        service.request(router: .getHistoricalQueries(environment)) { (result: Result<HistoricalQueries, SwiftHoleError>) in
+            switch result {
+            case .success(let historicalQueries):
+                completion(.success(historicalQueries.requests))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     
