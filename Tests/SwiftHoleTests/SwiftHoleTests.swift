@@ -42,28 +42,27 @@ final class SwiftHoleTests: XCTestCase {
         let decoder = JSONDecoder()
         do {
             let decoded = try decoder.decode(Summary.self, from: data)
-            XCTAssert(decoded.domainsBeingBlocked == 276319)
-            XCTAssert(decoded.dnsQueriesToday == 37852)
-            XCTAssert(decoded.adsBlockedToday == 5356)
-            XCTAssert(decoded.adsPercentageToday == 14.149847)
-            XCTAssert(decoded.uniqueDomains == 6863)
-            XCTAssert(decoded.queriesForwarded == 23015)
-            XCTAssert(decoded.queriesCached == 6932)
-            XCTAssert(decoded.clientsEverSeen == 33)
-            XCTAssert(decoded.uniqueClients == 19)
-            XCTAssert(decoded.dnsQueriesAllTypes == 37852)
-            XCTAssert(decoded.replyNODATA == 3097)
-            XCTAssert(decoded.replyNXDOMAIN == 4675)
-            XCTAssert(decoded.replyCNAME == 10987)
-            XCTAssert(decoded.replyIP == 17593)
-            XCTAssert(decoded.privacyLevel == 0)
-            XCTAssert(decoded.status == "enabled")
-            XCTAssert(decoded.gravityLastUpdated.fileExists == true)
-            XCTAssert(decoded.gravityLastUpdated.absolute == 1589194189)
-            XCTAssert(decoded.gravityLastUpdated.relative.days == 5)
-            XCTAssert(decoded.gravityLastUpdated.relative.hours == 1)
-            XCTAssert(decoded.gravityLastUpdated.relative.minutes == 36)
-            
+            XCTAssertEqual(decoded.domainsBeingBlocked, 276319, "it should have 276319 domainsBeingBlocked")
+            XCTAssertEqual(decoded.dnsQueriesToday, 37852, "it should have 37852 dnsQueriesToday")
+            XCTAssertEqual(decoded.adsBlockedToday, 5356, "it should have 5356 adsBlockedToday")
+            XCTAssertEqual(decoded.adsPercentageToday, 14.149847, "it should have 14.149847 adsPercentageToday")
+            XCTAssertEqual(decoded.uniqueDomains, 6863, "it should have 6863 uniqueDomains")
+            XCTAssertEqual(decoded.queriesForwarded, 23015, "it should have 23015 queriesForwarded")
+            XCTAssertEqual(decoded.queriesCached, 6932, "it should have 6932 queriesCached")
+            XCTAssertEqual(decoded.clientsEverSeen, 33, "it should have 33 clientsEverSeen")
+            XCTAssertEqual(decoded.uniqueClients, 19, "it should have 19 uniqueClients")
+            XCTAssertEqual(decoded.dnsQueriesAllTypes, 37852, "it should have 37852 dnsQueriesAllTypes")
+            XCTAssertEqual(decoded.replyNODATA, 3097, "it should have 3097 replyNODATA")
+            XCTAssertEqual(decoded.replyNXDOMAIN, 4675, "it should have 4675 replyNXDOMAIN")
+            XCTAssertEqual(decoded.replyCNAME, 10987, "it should have 10987 replyCNAME")
+            XCTAssertEqual(decoded.replyIP, 17593, "it should have 17593 replyIP")
+            XCTAssertEqual(decoded.privacyLevel, 0, "it should have 0 privacyLevel")
+            XCTAssertEqual(decoded.status, "enabled", "it should have status enabled")
+            XCTAssertEqual(decoded.gravityLastUpdated.fileExists, true, "it should have fileExists true")
+            XCTAssertEqual(decoded.gravityLastUpdated.absolute, 1589194189, "it should have 1589194189 gravityLastUpdated.absolute")
+            XCTAssertEqual(decoded.gravityLastUpdated.relative.days, 5, "it should have 5 gravityLastUpdated.relative.days")
+            XCTAssertEqual(decoded.gravityLastUpdated.relative.hours, 1, "it should have 1 gravityLastUpdated.relative.hours")
+            XCTAssertEqual(decoded.gravityLastUpdated.relative.minutes, 36, "it should have 36 gravityLastUpdated.relative.minutes")
         } catch {
             XCTFail("Can't decode test file bundle \(error)")
         }
@@ -108,28 +107,89 @@ final class SwiftHoleTests: XCTestCase {
         let decoder = JSONDecoder()
         do {
             let decoded = try decoder.decode(Summary.self, from: data)
-            XCTAssert(decoded.domainsBeingBlocked == 261271)
-            XCTAssert(decoded.dnsQueriesToday == 27581)
-            XCTAssert(decoded.adsBlockedToday == 4295)
-            XCTAssert(decoded.adsPercentageToday == 15.572314)
-            XCTAssert(decoded.uniqueDomains == 2760)
-            XCTAssert(decoded.queriesForwarded == 19663)
-            XCTAssert(decoded.queriesCached == 3623)
-            XCTAssert(decoded.clientsEverSeen == 14)
-            XCTAssert(decoded.uniqueClients == 13)
-            XCTAssert(decoded.dnsQueriesAllTypes == 27581)
-            XCTAssert(decoded.replyNODATA == 2732)
-            XCTAssert(decoded.replyNXDOMAIN == 1071)
-            XCTAssert(decoded.replyCNAME == 8179)
-            XCTAssert(decoded.replyIP == 11865)
-            XCTAssert(decoded.privacyLevel == 0)
-            XCTAssert(decoded.status == "enabled")
-            XCTAssert(decoded.gravityLastUpdated.fileExists == true)
-            XCTAssert(decoded.gravityLastUpdated.absolute == 1587264260)
-            XCTAssert(decoded.gravityLastUpdated.relative.days == 0)
-            XCTAssert(decoded.gravityLastUpdated.relative.hours == 18)
-            XCTAssert(decoded.gravityLastUpdated.relative.minutes == 47)
-            
+            XCTAssertEqual(decoded.domainsBeingBlocked, 261271, "it should have 261271 domainsBeingBlocked")
+            XCTAssertEqual(decoded.dnsQueriesToday, 27581, "it should have 27581 dnsQueriesToday")
+            XCTAssertEqual(decoded.adsBlockedToday, 4295, "it should have 4295 adsBlockedToday")
+            XCTAssertEqual(decoded.adsPercentageToday, 15.572314, "it should have 15.572314 adsPercentageToday")
+            XCTAssertEqual(decoded.uniqueDomains, 2760, "it should have 2760 uniqueDomains")
+            XCTAssertEqual(decoded.queriesForwarded, 19663, "it should have 19663 queriesForwarded")
+            XCTAssertEqual(decoded.queriesCached, 3623, "it should have 3623 queriesCached")
+            XCTAssertEqual(decoded.clientsEverSeen, 14, "it should have 14 clientsEverSeen")
+            XCTAssertEqual(decoded.uniqueClients, 13, "it should have 13 uniqueClients")
+            XCTAssertEqual(decoded.dnsQueriesAllTypes, 27581, "it should have 261271 dnsQueriesAllTypes")
+            XCTAssertEqual(decoded.replyNODATA, 2732, "it should have 261271 replyNODATA")
+            XCTAssertEqual(decoded.replyNXDOMAIN, 1071, "it should have 1071 replyNXDOMAIN")
+            XCTAssertEqual(decoded.replyCNAME, 8179, "it should have 8179 replyCNAME")
+            XCTAssertEqual(decoded.replyIP, 11865, "it should have 11865 replyIP")
+            XCTAssertEqual(decoded.privacyLevel, 0, "it should have 0 privacyLevel")
+            XCTAssertEqual(decoded.status, "enabled", "it should have status enabled")
+            XCTAssertEqual(decoded.gravityLastUpdated.fileExists, true, "it should have fileExists true")
+            XCTAssertEqual(decoded.gravityLastUpdated.absolute, 1587264260, "it should have 1587264260 gravityLastUpdated.absolute")
+            XCTAssertEqual(decoded.gravityLastUpdated.relative.days, 0, "it should have 0 gravityLastUpdated.relative.days")
+            XCTAssertEqual(decoded.gravityLastUpdated.relative.hours, 18, "it should have 18 gravityLastUpdated.relative.hours")
+            XCTAssertEqual(decoded.gravityLastUpdated.relative.minutes, 47, "it should have 47 gravityLastUpdated.relative.minutes")
+        } catch {
+            XCTFail("Can't decode test file bundle \(error)")
+        }
+    }
+    
+    func testDomainsOverTime() {
+       let jsonString = """
+        {
+          "domains_over_time": {
+            "1593882300": 357,
+            "1593882900": 209,
+            "1593883500": 211,
+            "1593884100": 170,
+            "1593884700": 274,
+            "1593885300": 224,
+            "1593885900": 368,
+            "1593886500": 238,
+            "1593887100": 652,
+            "1593887700": 392,
+            "1593888300": 331,
+            "1593888900": 279
+          },
+          "ads_over_time": {
+            "1593882300": 104,
+            "1593882900": 60,
+            "1593883500": 34,
+            "1593884100": 30,
+            "1593884700": 117,
+            "1593885300": 71,
+            "1593885900": 44,
+            "1593886500": 51,
+            "1593887100": 83,
+            "1593887700": 54,
+            "1593888300": 54,
+            "1593888900": 70
+          }
+        }
+    """
+
+        guard let data = jsonString.data(using: .utf8) else {
+            XCTFail("Can't transform string into data")
+            return
+        }
+        
+        let decoder = JSONDecoder()
+        do {
+            let decoded = try decoder.decode(HistoricalQueries.self, from: data)
+            XCTAssertEqual(decoded.requests.count, 12, "it should have 12 requests")
+
+            XCTAssertEqual(decoded.requests[0].adsCount, 104, "it should have 104 ads")
+            XCTAssertEqual(decoded.requests[0].permittedRequests, 253, "it should have 253 permitted requests")
+            XCTAssertEqual(decoded.requests[0].requestCount, 357, "it should have 253 permitted requests")
+            XCTAssertEqual(decoded.requests[0].date.timeIntervalSince1970, TimeInterval(1593882300), "date should be 1593882300 timeInterval")
+            XCTAssertEqual(decoded.requests[0].startDate.timeIntervalSince1970, TimeInterval((1593882000)), "startDate should be 1593882000 timeInterval")
+            XCTAssertEqual(decoded.requests[0].endDate.timeIntervalSince1970, TimeInterval(1593882599), "startDate should be 1593882000 timeInterval")
+    
+            XCTAssertEqual(decoded.requests[5].adsCount, 71, "it should have 71 ads")
+            XCTAssertEqual(decoded.requests[5].permittedRequests, 153, "it should have 153 permitted requests")
+            XCTAssertEqual(decoded.requests[5].requestCount, 224, "it should have 224 permitted requests")
+            XCTAssertEqual(decoded.requests[5].date.timeIntervalSince1970, TimeInterval(1593885300), "date should be 1593885300 timeInterval")
+            XCTAssertEqual(decoded.requests[5].startDate.timeIntervalSince1970, TimeInterval((1593885000)), "startDate should be 1593885000 timeInterval")
+            XCTAssertEqual(decoded.requests[5].endDate.timeIntervalSince1970, TimeInterval(1593885599), "startDate should be 1593885599 timeInterval")
         } catch {
             XCTFail("Can't decode test file bundle \(error)")
         }

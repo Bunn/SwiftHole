@@ -12,13 +12,15 @@ internal enum Router {
     case getLogs(Environment)
     case disable(Environment, Int)
     case enable(Environment)
+    case getHistoricalQueries(Environment)
     
     var scheme: String {
         switch self {
         case .getSummary,
              .getLogs,
              .disable,
-             .enable:
+             .enable,
+             .getHistoricalQueries:
             return "http"
         }
     }
@@ -28,7 +30,8 @@ internal enum Router {
         case .getSummary(let environment),
              .getLogs (let environment),
              .disable(let environment, _),
-             .enable (let environment):
+             .enable (let environment),
+             .getHistoricalQueries(let environment):
             return environment.host
         }
     }
@@ -38,17 +41,19 @@ internal enum Router {
         case .getSummary,
              .getLogs,
              .disable,
-             .enable:
+             .enable,
+             .getHistoricalQueries:
             return "/admin/api.php"
         }
     }
-
+    
     var port: Int? {
         switch self {
         case .getSummary(let environment),
              .getLogs (let environment),
              .disable(let environment, _),
-             .enable (let environment):
+             .enable (let environment),
+             .getHistoricalQueries (let environment):
             return environment.port        
         }
     }
@@ -58,7 +63,8 @@ internal enum Router {
         case .getSummary,
              .getLogs,
              .disable,
-             .enable:
+             .enable,
+             .getHistoricalQueries:
             return "GET"
         }
     }
@@ -79,6 +85,10 @@ internal enum Router {
         case .enable(let environment):
             return [URLQueryItem(name: "auth", value: environment.apiToken ?? ""),
                     URLQueryItem(name: "enable", value: "")]
+            
+        case .getHistoricalQueries (let environment):
+            return [URLQueryItem(name: "overTimeData10mins", value: ""),
+                    URLQueryItem(name: "auth", value: environment.apiToken ?? "")]
         }
     }
 }
