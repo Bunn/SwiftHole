@@ -75,7 +75,7 @@ public func enablePiHole(_ completion: @escaping (Result<Void, SwiftHoleError>) 
 
 public func disablePiHole(seconds: Int = 0, completion: @escaping (Result<Void, SwiftHoleError>) -> ())
 
-public func fetchHistoricalQueries(completion: @escaping (Result<Summary, SwiftHoleError>) -> ())
+public func fetchHistoricalQueries(completion: @escaping (Result<[DNSRequest], SwiftHoleError>) -> ())
 
 ```
 
