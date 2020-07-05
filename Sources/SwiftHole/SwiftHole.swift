@@ -10,7 +10,7 @@ public struct SwiftHole {
     
     
     // MARK: Public Methods
-
+    
     public init(host: String, port: Int? = nil, apiToken: String? = nil) {
         environment = Environment(host: host, port: port, apiToken: apiToken)
     }
@@ -42,11 +42,15 @@ public struct SwiftHole {
         }
     }
     
-
+    public func fetchHistoricalQueries(completion: @escaping (Result<Summary, SwiftHoleError>) -> ()) {
+        service.request(router: .getHistoricalQueries(environment), completion: completion)
+    }
+    
+    
     // MARK: Private Methods
-
+    
     private func handleEnableDisableMethod(type: EnableDisableMethodType, result: Result<Status, SwiftHoleError>, completion: @escaping (Result<Void, SwiftHoleError>) -> ()) {
-             
+        
         switch result {
         case .success(let status):
             if (type == .disable && status.isEnabled == false) ||

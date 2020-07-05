@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct HistoricalData: Decodable {
+public struct HistoricalQueries: Decodable {
     let domainsOverTime, adsOverTime: [String: Int]
     let requests: [DNSRequest]
 

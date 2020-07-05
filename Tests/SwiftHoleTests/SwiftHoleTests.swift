@@ -174,7 +174,7 @@ final class SwiftHoleTests: XCTestCase {
         
         let decoder = JSONDecoder()
         do {
-            let decoded = try decoder.decode(HistoricalData.self, from: data)
+            let decoded = try decoder.decode(HistoricalQueries.self, from: data)
             XCTAssertEqual(decoded.requests.count, 12, "it should have 12 requests")
 
             XCTAssertEqual(decoded.requests[0].adsCount, 104, "it should have 104 ads")

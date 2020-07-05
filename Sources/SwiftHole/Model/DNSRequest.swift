@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DNSRequest {
+public struct DNSRequest {
     let date: Date
     let adsCount: Int
     let requestCount: Int
