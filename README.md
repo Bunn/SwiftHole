@@ -66,15 +66,16 @@ SwiftHole.init(host: "192.168.1.123", apiToken: "klaatubaradanikto")
 SwiftHole has the following public interface:
 
 ```swift
-public struct SwiftHole {
 
-    public init(host: String, apiToken: String? = nil)
+public init(host: String, port: Int? = nil, apiToken: String? = nil)
 
-    public func fetchSummary(completion: @escaping (Result<Summary, SwiftHoleError>) -> ())
+public func fetchSummary(completion: @escaping (Result<Summary, SwiftHoleError>) -> ())
 
-    public func enablePiHole(_ completion: @escaping (Result<Void, SwiftHoleError>) -> ())
+public func enablePiHole(_ completion: @escaping (Result<Void, SwiftHoleError>) -> ())
 
-    public func disablePiHole(seconds: Int = 0, completion: @escaping (Result<Void, SwiftHoleError>) -> ())
-}
+public func disablePiHole(seconds: Int = 0, completion: @escaping (Result<Void, SwiftHoleError>) -> ())
+
+public func fetchHistoricalQueries(completion: @escaping (Result<Summary, SwiftHoleError>) -> ())
+
 ```
 
