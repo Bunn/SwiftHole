@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Status.swift
 //  
 //
 //  Created by Fernando Bunn on 10/05/2020.

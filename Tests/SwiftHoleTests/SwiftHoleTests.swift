@@ -135,6 +135,68 @@ final class SwiftHoleTests: XCTestCase {
         }
     }
     
+    func testDomainsOverTime() {
+       let jsonString = """
+        {
+          "domains_over_time": {
+            "1593882300": 357,
+            "1593882900": 209,
+            "1593883500": 211,
+            "1593884100": 170,
+            "1593884700": 274,
+            "1593885300": 224,
+            "1593885900": 368,
+            "1593886500": 238,
+            "1593887100": 652,
+            "1593887700": 392,
+            "1593888300": 331,
+            "1593888900": 279
+          },
+          "ads_over_time": {
+            "1593882300": 104,
+            "1593882900": 60,
+            "1593883500": 34,
+            "1593884100": 30,
+            "1593884700": 117,
+            "1593885300": 71,
+            "1593885900": 44,
+            "1593886500": 51,
+            "1593887100": 83,
+            "1593887700": 54,
+            "1593888300": 54,
+            "1593888900": 70
+          }
+        }
+    """
+
+        guard let data = jsonString.data(using: .utf8) else {
+            XCTFail("Can't transform string into data")
+            return
+        }
+        
+        let decoder = JSONDecoder()
+        do {
+            let decoded = try decoder.decode(HistoricalData.self, from: data)
+            XCTAssertEqual(decoded.requests.count, 12, "it should have 12 requests")
+
+            XCTAssertEqual(decoded.requests[0].adsCount, 104, "it should have 104 ads")
+            XCTAssertEqual(decoded.requests[0].permittedRequests, 253, "it should have 253 permitted requests")
+            XCTAssertEqual(decoded.requests[0].requestCount, 357, "it should have 253 permitted requests")
+            XCTAssertEqual(decoded.requests[0].date.timeIntervalSince1970, TimeInterval(1593882300), "date should be 1593882300 timeInterval")
+            XCTAssertEqual(decoded.requests[0].startDate.timeIntervalSince1970, TimeInterval((1593882000)), "startDate should be 1593882000 timeInterval")
+            XCTAssertEqual(decoded.requests[0].endDate.timeIntervalSince1970, TimeInterval(1593882599), "startDate should be 1593882000 timeInterval")
+    
+            XCTAssertEqual(decoded.requests[5].adsCount, 71, "it should have 71 ads")
+            XCTAssertEqual(decoded.requests[5].permittedRequests, 153, "it should have 153 permitted requests")
+            XCTAssertEqual(decoded.requests[5].requestCount, 224, "it should have 224 permitted requests")
+            XCTAssertEqual(decoded.requests[5].date.timeIntervalSince1970, TimeInterval(1593885300), "date should be 1593885300 timeInterval")
+            XCTAssertEqual(decoded.requests[5].startDate.timeIntervalSince1970, TimeInterval((1593885000)), "startDate should be 1593885000 timeInterval")
+            XCTAssertEqual(decoded.requests[5].endDate.timeIntervalSince1970, TimeInterval(1593885599), "startDate should be 1593885599 timeInterval")            
+        } catch {
+            XCTFail("Can't decode test file bundle \(error)")
+        }
+    }
+    
     static var allTests = [
         ("testSummaryCodable", testSummaryCodableVersion5x),
         ("testSummaryCodable", testSummaryCodableVersion4x),
