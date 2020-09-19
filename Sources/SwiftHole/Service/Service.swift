@@ -9,6 +9,7 @@ import Foundation
 
 internal struct Service {
     
+    var timeoutInterval: TimeInterval = 30
     
     // MARK: Public Methods
     
@@ -72,6 +73,7 @@ internal struct Service {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = router.method
         let session = URLSession(configuration: .default)
+        urlRequest.timeoutInterval = timeoutInterval
         let dataTask = session.dataTask(with: urlRequest, completionHandler: { data, response, error in
             if let error = error {
                 completionHandler(nil, nil, .sessionError(error))

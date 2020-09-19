@@ -1,3 +1,4 @@
+import Foundation
 
 private enum EnableDisableMethodType {
     case enable
@@ -6,12 +7,21 @@ private enum EnableDisableMethodType {
 
 public struct SwiftHole {
     private let environment: Environment
-    private let service = Service()
+    private var service = Service()
     
+    public var timeoutInterval: TimeInterval {
+        set {
+            service.timeoutInterval = newValue
+        }
+        get {
+            return service.timeoutInterval
+        }
+    }
     
     // MARK: Public Methods
     
-    public init(host: String, port: Int? = nil, apiToken: String? = nil) {
+    public init(host: String, port: Int? = nil, apiToken: String? = nil, timeoutInterval: TimeInterval = 30) {
+        service.timeoutInterval = timeoutInterval
         environment = Environment(host: host, port: port, apiToken: apiToken)
     }
     
