@@ -18,11 +18,12 @@ public struct SwiftHole {
         }
     }
     
+    
     // MARK: Public Methods
     
-    public init(host: String, port: Int? = nil, apiToken: String? = nil, timeoutInterval: TimeInterval = 30) {
+    public init(host: String, port: Int? = nil, apiToken: String? = nil, timeoutInterval: TimeInterval = 30, secure: Bool = false) {
         service.timeoutInterval = timeoutInterval
-        environment = Environment(host: host, port: port, apiToken: apiToken)
+        environment = Environment(host: host, port: port, apiToken: apiToken, secure: secure)
     }
     
     public func fetchSummary(completion: @escaping (Result<Summary, SwiftHoleError>) -> ()) {
@@ -86,7 +87,6 @@ public struct SwiftHole {
                 completion(.failure(.invalidAPIToken))
             default:
                 completion(.failure(error))
-                
             }
         }
     }

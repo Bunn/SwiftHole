@@ -16,12 +16,12 @@ internal enum Router {
     
     var scheme: String {
         switch self {
-        case .getSummary,
-             .getLogs,
-             .disable,
-             .enable,
-             .getHistoricalQueries:
-            return "http"
+        case .getSummary(let environment),
+             .getLogs (let environment),
+             .disable(let environment, _),
+             .enable (let environment),
+             .getHistoricalQueries(let environment):
+            return environment.secure ? "https" : "http"
         }
     }
     
