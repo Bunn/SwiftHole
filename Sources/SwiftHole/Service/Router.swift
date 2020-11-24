@@ -15,6 +15,7 @@ internal enum Router {
     case getHistoricalQueries(Environment)
     case getList(Environment, ListType)
     case addToList(Environment, ListType, String)
+    case removeFromList(Environment, ListType, String)
     
     var scheme: String {
         switch self {
@@ -24,7 +25,8 @@ internal enum Router {
              .enable (let environment),
              .getHistoricalQueries(let environment),
              .getList(let environment, _),
-             .addToList(let environment, _, _):
+             .addToList(let environment, _, _),
+             .removeFromList(let environment, _, _):
             return environment.secure ? "https" : "http"
         }
     }
@@ -37,7 +39,8 @@ internal enum Router {
              .enable (let environment),
              .getHistoricalQueries(let environment),
              .getList(let environment, _),
-             .addToList(let environment, _, _):
+             .addToList(let environment, _, _),
+             .removeFromList(let environment, _, _):
             return environment.host
         }
     }
@@ -50,7 +53,8 @@ internal enum Router {
              .enable,
              .getHistoricalQueries,
              .getList,
-             .addToList:
+             .addToList,
+             .removeFromList:
             return "/admin/api.php"
         }
     }
@@ -63,7 +67,8 @@ internal enum Router {
              .enable (let environment),
              .getHistoricalQueries (let environment),
              .getList(let environment, _),
-             .addToList(let environment, _, _):
+             .addToList(let environment, _, _),
+             .removeFromList(let environment, _, _):
             return environment.port
         }
     }
@@ -77,7 +82,8 @@ internal enum Router {
              .getHistoricalQueries:
             return "GET"
         case .getList,
-             .addToList:
+             .addToList,
+             .removeFromList:
             return "POST"
         }
     }
@@ -110,6 +116,11 @@ internal enum Router {
         case .addToList(let environment, let listType, let domain):
             return [URLQueryItem(name: "list", value: listType.endpointPath),
                     URLQueryItem(name: "add", value: domain),
+                    URLQueryItem(name: "auth", value: environment.apiToken ?? "")]
+            
+        case .removeFromList(let environment, let listType, let domain):
+            return [URLQueryItem(name: "list", value: listType.endpointPath),
+                    URLQueryItem(name: "sub", value: domain),
                     URLQueryItem(name: "auth", value: environment.apiToken ?? "")]
         }
     }

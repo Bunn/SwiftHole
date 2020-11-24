@@ -76,13 +76,28 @@ public struct SwiftHole {
     }
     
     public func add(domain: String, to list: ListType, completion: @escaping (Result<Void, SwiftHoleError>) -> ()) {
-        service.request(router: .addToList(environment, list, domain)) { (result: Result<AddItemToListResponse, SwiftHoleError>) in
+        service.request(router: .addToList(environment, list, domain)) { (result: Result<EditListResponse, SwiftHoleError>) in
             switch result {
             case .success(let response):
                 if response.success {
                     completion(.success(()))
                 } else {
-                    completion(.failure(.cantAddNewListItem(response.message)))
+                    completion(.failure(.cantAddNewListItem(response.message ?? "Unknown Error")))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    public func remove(domain: String, from list: ListType, completion: @escaping (Result<Void, SwiftHoleError>) -> ()) {        
+        service.request(router: .removeFromList(environment, list, domain)) { (result: Result<EditListResponse, SwiftHoleError>) in
+            switch result {
+            case .success(let response):
+                if response.success {
+                    completion(.success(()))
+                } else {
+                    completion(.failure(.cantAddNewListItem(response.message ?? "Unknown Error")))
                 }
             case .failure(let error):
                 completion(.failure(error))

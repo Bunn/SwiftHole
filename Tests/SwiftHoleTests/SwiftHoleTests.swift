@@ -6,7 +6,7 @@ import XCTest
  If you want to run tests on a real pi-hole you need to setup the PiholeHost bellow
  ps. I did not forget to remove my host/token, they are from a Virtual Machine I use only for testing this library, but thanks for caring :)
  */
-let shouldRunRealPiholeTests = true
+let shouldRunRealPiholeTests = false
 let testExpectationTimeout: TimeInterval = 10
 
 private struct PiholeHost {
@@ -21,12 +21,51 @@ final class SwiftHoleTests: XCTestCase {
   
     //MARK:- Remote Tests
     
-    func testAddInvalidItemToBlacklist() throws {
-        let host = PiholeHost()
+    func testRemoveItemFromBlackList() throws {
+        try validateRemoteTests()
 
-        try XCTSkipIf(shouldRunRealPiholeTests == false, "Should not run real pi-hole tests")
+        let host = PiholeHost()
+        let domain = "www.mynewdomain.com"
         
-        let expectation = XCTestExpectation(description: "Add URL to blacklist")
+        let expectation = XCTestExpectation(description: "Remove domain from blacklist")
+        let service = SwiftHole(host: host.host, apiToken: host.token, timeoutInterval: host.timeout, secure: host.secure)
+        service.add(domain: domain, to: .blacklist) { result in
+            
+            self.checkIfDomainExists(domain, on: .blacklist) { result in
+                XCTAssert(result, "Domain should exist")
+
+                service.remove(domain: domain, from: .blacklist) { result in
+                    switch result {
+                    case .success:
+                        self.checkIfDomainExists(domain, on: .blacklist) { result in
+                            XCTAssert(result == false, "Domain should not exist")
+                        }
+                    case .failure(let error):
+                        XCTFail("Async list error \(error)")
+                    }
+                    expectation.fulfill()
+                }
+            }
+        }
+        
+        service.remove(domain: "www.customdomain.com", from: .blacklist) { result in
+            switch result {
+            case .success:
+                break;
+            case .failure(let error):
+                XCTFail("Async list error \(error)")
+            }
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: testExpectationTimeout)
+    }
+
+    func testAddInvalidItemToBlacklist() throws {
+        try validateRemoteTests()
+
+        let host = PiholeHost()
+        let expectation = XCTestExpectation(description: "Add invalid URL to blacklist")
         let service = SwiftHole(host: host.host, apiToken: host.token, timeoutInterval: host.timeout, secure: host.secure)
 
         service.add(domain: "www.###.com", to: .blacklist) { result in
@@ -47,16 +86,19 @@ final class SwiftHoleTests: XCTestCase {
     }
     
     func testAddItemToBlacklist() throws {
-        let host = PiholeHost()
+        try validateRemoteTests()
 
-        try XCTSkipIf(shouldRunRealPiholeTests == false, "Should not run real pi-hole tests")
-        
+        let host = PiholeHost()
         let expectation = XCTestExpectation(description: "Add URL to blacklist")
         let service = SwiftHole(host: host.host, apiToken: host.token, timeoutInterval: host.timeout, secure: host.secure)
-
-        service.add(domain: "www.customdomain.com", to: .blacklist) { result in
+        let domain = "www.customdomain.com"
+        
+        service.add(domain: domain, to: .blacklist) { result in
             switch result {
             case .success:
+                self.checkIfDomainExists(domain, on: .blacklist) { result in
+                    XCTAssert(result, "Domain should exist")
+                }
                 break
             case .failure(let error):
                 switch error {
@@ -72,9 +114,9 @@ final class SwiftHoleTests: XCTestCase {
     }
     
     func testFetchRemoteWhitelist() throws {
-        let host = PiholeHost()
+        try validateRemoteTests()
 
-        try XCTSkipIf(shouldRunRealPiholeTests == false, "Should not run real pi-hole tests")
+        let host = PiholeHost()
         
         let expectation = XCTestExpectation(description: "Download whitelist data")
         let service = SwiftHole(host: host.host, apiToken: host.token, timeoutInterval: host.timeout, secure: host.secure)
@@ -96,9 +138,9 @@ final class SwiftHoleTests: XCTestCase {
     }
     
     func testFetchRemoteBlacklist() throws {
-        let host = PiholeHost()
+        try validateRemoteTests()
 
-        try XCTSkipIf(shouldRunRealPiholeTests == false, "Should not run real pi-hole tests")
+        let host = PiholeHost()
         
         let expectation = XCTestExpectation(description: "Download blacklist data")
         let service = SwiftHole(host: host.host, apiToken: host.token, timeoutInterval: host.timeout, secure: host.secure)
@@ -318,4 +360,27 @@ final class SwiftHoleTests: XCTestCase {
         ("testSummaryCodable", testSummaryCodableVersion5x),
         ("testSummaryCodable", testSummaryCodableVersion4x),
     ]
+}
+
+
+extension SwiftHoleTests {
+    
+    private func checkIfDomainExists(_ domain: String, on list: ListType, completion: @escaping (Bool) -> () ) {
+        let host = PiholeHost()
+        let service = SwiftHole(host: host.host, apiToken: host.token, timeoutInterval: host.timeout, secure: host.secure)
+
+        service.fetchList(list) { result in
+            switch result {
+            case .success(let list):
+                let result = list.filter { $0.domain == domain }
+                completion(result.count > 0)
+            case .failure:
+                completion(false)
+            }
+        }
+    }
+    
+    private func validateRemoteTests() throws {
+        try XCTSkipIf(shouldRunRealPiholeTests == false, "Should not run real pi-hole tests")
+    }
 }

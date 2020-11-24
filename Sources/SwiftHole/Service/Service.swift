@@ -11,6 +11,7 @@ internal struct Service {
     
     var timeoutInterval: TimeInterval = 30
     
+    
     // MARK: Public Methods
     
     func request(router: Router, completion: @escaping (Result<Void, SwiftHoleError>) -> ()) {
