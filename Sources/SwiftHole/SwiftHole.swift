@@ -53,11 +53,37 @@ public struct SwiftHole {
         }
     }
     
+    public func fetchList(_ listType: ListType, completion: @escaping (Result<[ListItem], SwiftHoleError>) -> ()) {
+        service.request(router: .getList(environment, listType)) { (result: Result<List, SwiftHoleError>) in
+            switch result {
+            case .success(let list):
+                completion(.success(list.items))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
     public func fetchHistoricalQueries(completion: @escaping (Result<[DNSRequest], SwiftHoleError>) -> ()) {
         service.request(router: .getHistoricalQueries(environment)) { (result: Result<HistoricalQueries, SwiftHoleError>) in
             switch result {
             case .success(let historicalQueries):
                 completion(.success(historicalQueries.requests))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    public func add(domain: String, to list: ListType, completion: @escaping (Result<Void, SwiftHoleError>) -> ()) {
+        service.request(router: .addToList(environment, list, domain)) { (result: Result<AddItemToListResponse, SwiftHoleError>) in
+            switch result {
+            case .success(let response):
+                if response.success {
+                    completion(.success(()))
+                } else {
+                    completion(.failure(.cantAddNewListItem(response.message)))
+                }
             case .failure(let error):
                 completion(.failure(error))
             }

@@ -1,7 +1,126 @@
 import XCTest
 @testable import SwiftHole
 
+
+/*
+ If you want to run tests on a real pi-hole you need to setup the PiholeHost bellow
+ ps. I did not forget to remove my host/token, they are from a Virtual Machine I use only for testing this library, but thanks for caring :)
+ */
+let shouldRunRealPiholeTests = true
+let testExpectationTimeout: TimeInterval = 10
+
+private struct PiholeHost {
+    let host = "192.168.56.101"
+    let token = "4a5c00a194743937ca021bda9bbbd82791cc62b72b6ce47d4a9bcf24c12e6576"
+    let secure = false
+    let timeout: TimeInterval = 10
+}
+
 final class SwiftHoleTests: XCTestCase {
+    
+  
+    //MARK:- Remote Tests
+    
+    func testAddInvalidItemToBlacklist() throws {
+        let host = PiholeHost()
+
+        try XCTSkipIf(shouldRunRealPiholeTests == false, "Should not run real pi-hole tests")
+        
+        let expectation = XCTestExpectation(description: "Add URL to blacklist")
+        let service = SwiftHole(host: host.host, apiToken: host.token, timeoutInterval: host.timeout, secure: host.secure)
+
+        service.add(domain: "www.###.com", to: .blacklist) { result in
+            switch result {
+            case .success:
+                XCTFail("It should not work")
+            case .failure(let error):
+                switch error {
+                case .cantAddNewListItem:
+                    break
+                default:
+                    XCTFail("Async list error \(error)")
+                }
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: testExpectationTimeout)
+    }
+    
+    func testAddItemToBlacklist() throws {
+        let host = PiholeHost()
+
+        try XCTSkipIf(shouldRunRealPiholeTests == false, "Should not run real pi-hole tests")
+        
+        let expectation = XCTestExpectation(description: "Add URL to blacklist")
+        let service = SwiftHole(host: host.host, apiToken: host.token, timeoutInterval: host.timeout, secure: host.secure)
+
+        service.add(domain: "www.customdomain.com", to: .blacklist) { result in
+            switch result {
+            case .success:
+                break
+            case .failure(let error):
+                switch error {
+                case .cantAddNewListItem(let message):
+                    XCTFail("Async list error \(message)")
+                default:
+                    XCTFail("Async list error \(error)")
+                }
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: testExpectationTimeout)
+    }
+    
+    func testFetchRemoteWhitelist() throws {
+        let host = PiholeHost()
+
+        try XCTSkipIf(shouldRunRealPiholeTests == false, "Should not run real pi-hole tests")
+        
+        let expectation = XCTestExpectation(description: "Download whitelist data")
+        let service = SwiftHole(host: host.host, apiToken: host.token, timeoutInterval: host.timeout, secure: host.secure)
+        
+        service.fetchList(.whitelist) { result in
+            switch result {
+            case .success(let list):
+                XCTAssertNotNil(list)
+
+                list.forEach { item in
+                    XCTAssertEqual(item.listType, .whitelist)
+                }
+            case .failure(let error):
+                XCTFail("Async list error \(error)")
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: testExpectationTimeout)
+    }
+    
+    func testFetchRemoteBlacklist() throws {
+        let host = PiholeHost()
+
+        try XCTSkipIf(shouldRunRealPiholeTests == false, "Should not run real pi-hole tests")
+        
+        let expectation = XCTestExpectation(description: "Download blacklist data")
+        let service = SwiftHole(host: host.host, apiToken: host.token, timeoutInterval: host.timeout, secure: host.secure)
+        
+        service.fetchList(.blacklist) { result in
+            switch result {
+            case .success(let list):
+                XCTAssertNotNil(list)
+
+                list.forEach { item in
+                    XCTAssertEqual(item.listType, .blacklist)
+                }
+            case .failure(let error):
+                XCTFail("Async list error \(error)")
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: testExpectationTimeout)
+    }
+    
+    
+    //MARK:- Local Tests
     
     func testSummaryCodableVersion5x() {
         let jsonString = """
@@ -134,7 +253,7 @@ final class SwiftHoleTests: XCTestCase {
     }
     
     func testDomainsOverTime() {
-       let jsonString = """
+        let jsonString = """
         {
           "domains_over_time": {
             "1593882300": 357,
@@ -166,7 +285,7 @@ final class SwiftHoleTests: XCTestCase {
           }
         }
     """
-
+        
         guard let data = jsonString.data(using: .utf8) else {
             XCTFail("Can't transform string into data")
             return
@@ -176,14 +295,14 @@ final class SwiftHoleTests: XCTestCase {
         do {
             let decoded = try decoder.decode(HistoricalQueries.self, from: data)
             XCTAssertEqual(decoded.requests.count, 12, "it should have 12 requests")
-
+            
             XCTAssertEqual(decoded.requests[0].adsCount, 104, "it should have 104 ads")
             XCTAssertEqual(decoded.requests[0].permittedRequests, 253, "it should have 253 permitted requests")
             XCTAssertEqual(decoded.requests[0].requestCount, 357, "it should have 253 permitted requests")
             XCTAssertEqual(decoded.requests[0].date.timeIntervalSince1970, TimeInterval(1593882300), "date should be 1593882300 timeInterval")
             XCTAssertEqual(decoded.requests[0].startDate.timeIntervalSince1970, TimeInterval((1593882000)), "startDate should be 1593882000 timeInterval")
             XCTAssertEqual(decoded.requests[0].endDate.timeIntervalSince1970, TimeInterval(1593882599), "startDate should be 1593882000 timeInterval")
-    
+            
             XCTAssertEqual(decoded.requests[5].adsCount, 71, "it should have 71 ads")
             XCTAssertEqual(decoded.requests[5].permittedRequests, 153, "it should have 153 permitted requests")
             XCTAssertEqual(decoded.requests[5].requestCount, 224, "it should have 224 permitted requests")

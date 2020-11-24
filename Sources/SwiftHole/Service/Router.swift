@@ -13,6 +13,8 @@ internal enum Router {
     case disable(Environment, Int)
     case enable(Environment)
     case getHistoricalQueries(Environment)
+    case getList(Environment, ListType)
+    case addToList(Environment, ListType, String)
     
     var scheme: String {
         switch self {
@@ -20,7 +22,9 @@ internal enum Router {
              .getLogs (let environment),
              .disable(let environment, _),
              .enable (let environment),
-             .getHistoricalQueries(let environment):
+             .getHistoricalQueries(let environment),
+             .getList(let environment, _),
+             .addToList(let environment, _, _):
             return environment.secure ? "https" : "http"
         }
     }
@@ -31,7 +35,9 @@ internal enum Router {
              .getLogs (let environment),
              .disable(let environment, _),
              .enable (let environment),
-             .getHistoricalQueries(let environment):
+             .getHistoricalQueries(let environment),
+             .getList(let environment, _),
+             .addToList(let environment, _, _):
             return environment.host
         }
     }
@@ -42,7 +48,9 @@ internal enum Router {
              .getLogs,
              .disable,
              .enable,
-             .getHistoricalQueries:
+             .getHistoricalQueries,
+             .getList,
+             .addToList:
             return "/admin/api.php"
         }
     }
@@ -53,8 +61,10 @@ internal enum Router {
              .getLogs (let environment),
              .disable(let environment, _),
              .enable (let environment),
-             .getHistoricalQueries (let environment):
-            return environment.port        
+             .getHistoricalQueries (let environment),
+             .getList(let environment, _),
+             .addToList(let environment, _, _):
+            return environment.port
         }
     }
     
@@ -66,6 +76,9 @@ internal enum Router {
              .enable,
              .getHistoricalQueries:
             return "GET"
+        case .getList,
+             .addToList:
+            return "POST"
         }
     }
     
@@ -86,8 +99,17 @@ internal enum Router {
             return [URLQueryItem(name: "auth", value: environment.apiToken ?? ""),
                     URLQueryItem(name: "enable", value: "")]
             
-        case .getHistoricalQueries (let environment):
+        case .getHistoricalQueries(let environment):
             return [URLQueryItem(name: "overTimeData10mins", value: ""),
+                    URLQueryItem(name: "auth", value: environment.apiToken ?? "")]
+            
+        case .getList(let environment, let listType):
+            return [URLQueryItem(name: "list", value: listType.endpointPath),
+                    URLQueryItem(name: "auth", value: environment.apiToken ?? "")]
+            
+        case .addToList(let environment, let listType, let domain):
+            return [URLQueryItem(name: "list", value: listType.endpointPath),
+                    URLQueryItem(name: "add", value: domain),
                     URLQueryItem(name: "auth", value: environment.apiToken ?? "")]
         }
     }

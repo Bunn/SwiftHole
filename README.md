@@ -67,7 +67,9 @@ SwiftHole has the following public interface:
 
 ```swift
 
-public init(host: String, port: Int? = nil, apiToken: String? = nil)
+public var timeoutInterval: TimeInterval { get set }
+
+public init(host: String, port: Int? = nil, apiToken: String? = nil, timeoutInterval: TimeInterval = 30, secure: Bool = false)
 
 public func fetchSummary(completion: @escaping (Result<Summary, SwiftHoleError>) -> ())
 
@@ -75,7 +77,11 @@ public func enablePiHole(_ completion: @escaping (Result<Void, SwiftHoleError>) 
 
 public func disablePiHole(seconds: Int = 0, completion: @escaping (Result<Void, SwiftHoleError>) -> ())
 
+public func fetchList(_ listType: ListType, completion: @escaping (Result<[ListItem], SwiftHoleError>) -> ())
+
 public func fetchHistoricalQueries(completion: @escaping (Result<[DNSRequest], SwiftHoleError>) -> ())
+
+public func add(domain: String, to list: ListType, completion: @escaping (Result<Void, SwiftHoleError>) -> ())
 
 ```
 

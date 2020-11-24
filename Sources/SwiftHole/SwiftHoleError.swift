@@ -15,4 +15,5 @@ public enum SwiftHoleError: Error {
     case invalidResponse
     case invalidAPIToken
     case invalidDecode(Error)
+    case cantAddNewListItem(String)
 }
