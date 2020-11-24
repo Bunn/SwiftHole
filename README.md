@@ -83,5 +83,7 @@ public func fetchHistoricalQueries(completion: @escaping (Result<[DNSRequest], S
 
 public func add(domain: String, to list: ListType, completion: @escaping (Result<Void, SwiftHoleError>) -> ())
 
+public func remove(domain: String, from list: ListType, completion: @escaping (Result<Void, SwiftHoleError>) -> ())
+
 ```
 
