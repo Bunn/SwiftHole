@@ -132,6 +132,18 @@ public struct SwiftHole {
         }
     }
     
+    /// Fetches the percentage of queries type made
+    public func fetchQueryTypePercentages(completion: @escaping (Result<[QueryPercentage], SwiftHoleError>) -> ()) {
+        service.request(router: .getQueryTypes(environment)) { (result: Result<QueryPercentage.List, SwiftHoleError>) in
+            switch result {
+            case .success(let list):
+                completion(.success(list.values))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
     
     // MARK: Private Methods
     

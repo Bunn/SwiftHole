@@ -12,6 +12,7 @@ internal enum Router {
     case getLogs(Environment)
     case disable(Environment, Int)
     case enable(Environment)
+    case getQueryTypes(Environment)
     case getHistoricalQueries(Environment)
     case getList(Environment, ListType)
     case addToList(Environment, ListType, String)
@@ -23,6 +24,7 @@ internal enum Router {
              .getLogs (let environment),
              .disable(let environment, _),
              .enable (let environment),
+             .getQueryTypes (let environment),
              .getHistoricalQueries(let environment),
              .getList(let environment, _),
              .addToList(let environment, _, _),
@@ -37,6 +39,7 @@ internal enum Router {
              .getLogs (let environment),
              .disable(let environment, _),
              .enable (let environment),
+             .getQueryTypes (let environment),
              .getHistoricalQueries(let environment),
              .getList(let environment, _),
              .addToList(let environment, _, _),
@@ -51,6 +54,7 @@ internal enum Router {
              .getLogs,
              .disable,
              .enable,
+             .getQueryTypes,
              .getHistoricalQueries,
              .getList,
              .addToList,
@@ -65,6 +69,7 @@ internal enum Router {
              .getLogs (let environment),
              .disable(let environment, _),
              .enable (let environment),
+             .getQueryTypes (let environment),
              .getHistoricalQueries (let environment),
              .getList(let environment, _),
              .addToList(let environment, _, _),
@@ -79,6 +84,7 @@ internal enum Router {
              .getLogs,
              .disable,
              .enable,
+             .getQueryTypes,
              .getHistoricalQueries:
             return "GET"
         case .getList,
@@ -104,6 +110,10 @@ internal enum Router {
         case .enable(let environment):
             return [URLQueryItem(name: "auth", value: environment.apiToken ?? ""),
                     URLQueryItem(name: "enable", value: "")]
+            
+        case .getQueryTypes(let environment):
+            return [URLQueryItem(name: "auth", value: environment.apiToken ?? ""),
+                    URLQueryItem(name: "getQueryTypes", value: "")]
             
         case .getHistoricalQueries(let environment):
             return [URLQueryItem(name: "overTimeData10mins", value: ""),

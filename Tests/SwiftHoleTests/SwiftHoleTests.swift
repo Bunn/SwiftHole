@@ -294,6 +294,47 @@ final class SwiftHoleTests: XCTestCase {
         }
     }
     
+    func testQueryTypes() {
+        let jsonString = """
+            {
+              "querytypes": {
+                "A (IPv4)": 36.13,
+                "AAAA (IPv6)": 35.47,
+                "ANY": 0,
+                "SRV": 0,
+                "SOA": 0,
+                "PTR": 11.86,
+                "TXT": 16.29,
+                "NAPTR": 0,
+                "MX": 0,
+                "DS": 0,
+                "RRSIG": 0,
+                "DNSKEY": 0,
+                "NS": 0,
+                "OTHER": 0,
+                "SVCB": 0,
+                "HTTPS": 0.25
+              }
+            }
+            """
+        guard let data = jsonString.data(using: .utf8) else {
+            XCTFail("Can't transform string into data")
+            return
+        }
+        let decoder = JSONDecoder()
+        do {
+            let decoded = try decoder.decode(QueryPercentage.List.self, from: data)
+            
+            XCTAssertEqual(decoded.values.filter { $0.type == .IPv4 }.first?.value, 36.13, "it should have 36.13 % queries")
+            XCTAssertEqual(decoded.values.filter { $0.type == .IPv6 }.first?.value, 35.47, "it should have 35.47 % queries")
+            XCTAssertEqual(decoded.values.filter { $0.type == .PTR }.first?.value, 11.86, "it should have 11.86 % queries")
+            XCTAssertEqual(decoded.values.filter { $0.type == .HTTPS }.first?.value, 0.25, "it should have 0.25 % queries")
+
+        } catch {
+            XCTFail("Can't decode test file bundle \(error)")
+        }
+    }
+    
     func testDomainsOverTime() {
         let jsonString = """
         {
