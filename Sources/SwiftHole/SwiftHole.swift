@@ -21,15 +21,25 @@ public struct SwiftHole {
     
     // MARK: Public Methods
     
+    /// Initialize SwiftHole
+    /// - Parameters:
+    ///   - host: Host IP Address
+    ///   - port: Optional host port
+    ///   - apiToken: Optional API Token, required for some methods like disable/enable
+    ///   - timeoutInterval: Interval for timeout
+    ///   - secure: Boolean to indicate if the pi-hole is using HTTPS or not
     public init(host: String, port: Int? = nil, apiToken: String? = nil, timeoutInterval: TimeInterval = 30, secure: Bool = false) {
         service.timeoutInterval = timeoutInterval
         environment = Environment(host: host, port: port, apiToken: apiToken, secure: secure)
     }
     
+    
+    /// Fetches pi-hole summary and assigns it to its summary property
     public func fetchSummary(completion: @escaping (Result<Summary, SwiftHoleError>) -> ()) {
         service.request(router: .getSummary(environment), completion: completion)
     }
     
+    /// Enable pi-hole. Does nothing if pi-hole is already enabled
     public func enablePiHole(_ completion: @escaping (Result<Void, SwiftHoleError>) -> ()) {
         if environment.apiToken == nil {
             completion(.failure(.noAPITokenProvided))
@@ -41,7 +51,10 @@ public struct SwiftHole {
         }
     }
     
-    //0 seconds means PiHole will be disabled permanently
+    
+    /// Disable pi-hole.
+    /// - Parameters:
+    ///   - seconds: Number in seconds for the pi-hole to get back online once disabled. 0 seconds means it will be disabled permanently
     public func disablePiHole(seconds: Int = 0, completion: @escaping (Result<Void, SwiftHoleError>) -> ()) {
         if environment.apiToken == nil {
             completion(.failure(.noAPITokenProvided))
@@ -53,6 +66,10 @@ public struct SwiftHole {
         }
     }
     
+    
+    /// Fetches the pi-hole black or white lists
+    /// - Parameters:
+    ///   - listType: Type of list you want to fetch
     public func fetchList(_ listType: ListType, completion: @escaping (Result<[ListItem], SwiftHoleError>) -> ()) {
         service.request(router: .getList(environment, listType)) { (result: Result<List, SwiftHoleError>) in
             switch result {
@@ -64,6 +81,8 @@ public struct SwiftHole {
         }
     }
     
+    
+    /// Fetches the amount of queries made over time
     public func fetchHistoricalQueries(completion: @escaping (Result<[DNSRequest], SwiftHoleError>) -> ()) {
         service.request(router: .getHistoricalQueries(environment)) { (result: Result<HistoricalQueries, SwiftHoleError>) in
             switch result {
@@ -75,6 +94,10 @@ public struct SwiftHole {
         }
     }
     
+    /// Add a domain to a list
+    /// - Parameters:
+    ///   - domain: Domain address
+    ///   - list: List type.
     public func add(domain: String, to list: ListType, completion: @escaping (Result<Void, SwiftHoleError>) -> ()) {
         service.request(router: .addToList(environment, list, domain)) { (result: Result<EditListResponse, SwiftHoleError>) in
             switch result {
@@ -90,6 +113,10 @@ public struct SwiftHole {
         }
     }
     
+    /// Remove a domain to a list
+    /// - Parameters:
+    ///   - domain: Domain address
+    ///   - list: List type.
     public func remove(domain: String, from list: ListType, completion: @escaping (Result<Void, SwiftHoleError>) -> ()) {        
         service.request(router: .removeFromList(environment, list, domain)) { (result: Result<EditListResponse, SwiftHoleError>) in
             switch result {
