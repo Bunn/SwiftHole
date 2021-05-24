@@ -15,6 +15,10 @@ public struct Summary: Decodable {
     public let replyCNAME, replyIP, privacyLevel: Int
     public let status: String
     public let gravityLastUpdated: GravityLastUpdated
+    
+    public var isEnabled: Bool {
+        return status.lowercased() == "enabled"
+    }
 
     enum CodingKeys: String, CodingKey {
         case domainsBeingBlocked = "domains_being_blocked"
