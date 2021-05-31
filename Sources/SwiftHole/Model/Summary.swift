@@ -59,6 +59,7 @@ public struct GravityLastUpdated: Decodable {
 // MARK: - Relative
 
 public struct Relative: Decodable {
+
     public var days, hours, minutes: Int
     
     enum CodingKeys: String, CodingKey {
@@ -82,5 +83,31 @@ public struct Relative: Decodable {
             hours = try values.decode(Int.self, forKey: .hours)
             minutes = try values.decode(Int.self, forKey: .minutes)
         }
+    }
+    
+    internal init(days: Int, hours: Int, minutes: Int) {
+        self.days = days
+        self.hours = hours
+        self.minutes = minutes
+    }
+    
+}
+
+
+extension Summary: Mockable {
+    static func mockData() -> Summary {
+        Summary(domainsBeingBlocked: 1, dnsQueriesToday: 2, adsBlockedToday: 3, adsPercentageToday: 4, uniqueDomains: 5, queriesForwarded: 6, queriesCached: 7, clientsEverSeen: 8, uniqueClients: 9, dnsQueriesAllTypes: 10, replyNODATA: 11, replyNXDOMAIN: 12, replyCNAME: 13, replyIP: 14, privacyLevel: 15, status: "enabled", gravityLastUpdated: GravityLastUpdated.mockData())
+    }
+}
+
+extension GravityLastUpdated: Mockable {
+    static func mockData() -> GravityLastUpdated {
+        GravityLastUpdated(fileExists: true, absolute: 1, relative: Relative.mockData())
+    }
+}
+
+extension Relative: Mockable {
+    static func mockData() -> Relative {
+        Relative(days: 10, hours: 11, minutes: 12)
     }
 }

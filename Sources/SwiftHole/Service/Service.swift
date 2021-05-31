@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal struct Service {
+internal struct Service: ServiceProtocol {
     
     var timeoutInterval: TimeInterval = 30
     

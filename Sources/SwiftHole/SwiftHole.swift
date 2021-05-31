@@ -7,7 +7,7 @@ private enum EnableDisableMethodType {
 
 public struct SwiftHole {
     private let environment: Environment
-    private var service = Service()
+    private var service: ServiceProtocol
     
     public var timeoutInterval: TimeInterval {
         set {
@@ -29,10 +29,17 @@ public struct SwiftHole {
     ///   - timeoutInterval: Interval for timeout
     ///   - secure: Boolean to indicate if the pi-hole is using HTTPS or not
     public init(host: String, port: Int? = nil, apiToken: String? = nil, timeoutInterval: TimeInterval = 30, secure: Bool = false) {
-        service.timeoutInterval = timeoutInterval
+        self.service = Service()
+        self.service.timeoutInterval = timeoutInterval
         environment = Environment(host: host, port: port, apiToken: apiToken, secure: secure)
     }
     
+    //Init method that receives a ServiceProtocol for testing
+    init(host: String, port: Int? = nil, apiToken: String? = nil, timeoutInterval: TimeInterval = 30, secure: Bool = false, service: ServiceProtocol) {
+        self.service = service
+        self.service.timeoutInterval = timeoutInterval
+        environment = Environment(host: host, port: port, apiToken: apiToken, secure: secure)
+    }
     
     /// Fetches pi-hole summary and assigns it to its summary property
     public func fetchSummary(completion: @escaping (Result<Summary, SwiftHoleError>) -> ()) {
