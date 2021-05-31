@@ -7,7 +7,8 @@ import XCTest
  ps. I did not forget to remove my host/token, they are from a Virtual Machine I use only for testing this library, but thanks for caring :)
  */
 let shouldRunRealPiholeTests = false
-let testExpectationTimeout: TimeInterval = 10
+let testRemoteExpectationTimeout: TimeInterval = 10
+let testLocalExpectationTimeout: TimeInterval = 1
 
 private struct PiholeHost {
     let host = "192.168.56.101"
@@ -58,7 +59,7 @@ final class SwiftHoleTests: XCTestCase {
             expectation.fulfill()
         }
         
-        wait(for: [expectation], timeout: testExpectationTimeout)
+        wait(for: [expectation], timeout: testRemoteExpectationTimeout)
     }
 
     func testAddInvalidItemToBlacklist() throws {
@@ -82,7 +83,7 @@ final class SwiftHoleTests: XCTestCase {
             }
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: testExpectationTimeout)
+        wait(for: [expectation], timeout: testRemoteExpectationTimeout)
     }
     
     func testAddItemToBlacklist() throws {
@@ -110,7 +111,7 @@ final class SwiftHoleTests: XCTestCase {
             }
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: testExpectationTimeout)
+        wait(for: [expectation], timeout: testRemoteExpectationTimeout)
     }
     
     func testFetchRemoteWhitelist() throws {
@@ -134,7 +135,7 @@ final class SwiftHoleTests: XCTestCase {
             }
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: testExpectationTimeout)
+        wait(for: [expectation], timeout: testRemoteExpectationTimeout)
     }
     
     func testFetchRemoteBlacklist() throws {
@@ -158,11 +159,28 @@ final class SwiftHoleTests: XCTestCase {
             }
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: testExpectationTimeout)
+        wait(for: [expectation], timeout: testRemoteExpectationTimeout)
     }
     
     
     //MARK:- Local Tests
+    
+    func testFetchSummary() {
+        let expectation = XCTestExpectation(description: "Download summary data")
+
+        let test = SwiftHole(host: "10", port: 123, apiToken: "aaa", timeoutInterval: 10, secure: false, service: MockService())
+        test.fetchSummary { result in
+            switch result {
+            case .success(let summary):
+                XCTAssertEqual(summary.adsBlockedToday, 3)
+                XCTAssertTrue(summary.isEnabled)
+            case .failure(let error):
+                XCTFail("fetch summary error \(error)")
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: testLocalExpectationTimeout)
+    }
     
     func testSummaryCodableVersion5x() {
         let jsonString = """
