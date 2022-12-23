@@ -96,8 +96,9 @@ internal enum Router {
     
     var parameters: [URLQueryItem] {
         switch self {
-        case .getSummary:
-            return []
+        case .getSummary (let environment):
+            return [URLQueryItem(name: "summaryRaw", value: ""),
+                    URLQueryItem(name: "auth", value: environment.apiToken ?? "")]
             
         case .getLogs (let environment):
             return [URLQueryItem(name: "getAllQueries", value: "100"),
