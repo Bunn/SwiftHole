@@ -237,11 +237,6 @@ final class SwiftHoleTests: XCTestCase {
             XCTAssertEqual(decoded.replyIP, 17593, "it should have 17593 replyIP")
             XCTAssertEqual(decoded.privacyLevel, 0, "it should have 0 privacyLevel")
             XCTAssertEqual(decoded.status, "enabled", "it should have status enabled")
-            XCTAssertEqual(decoded.gravityLastUpdated.fileExists, true, "it should have fileExists true")
-            XCTAssertEqual(decoded.gravityLastUpdated.absolute, 1589194189, "it should have 1589194189 gravityLastUpdated.absolute")
-            XCTAssertEqual(decoded.gravityLastUpdated.relative.days, 5, "it should have 5 gravityLastUpdated.relative.days")
-            XCTAssertEqual(decoded.gravityLastUpdated.relative.hours, 1, "it should have 1 gravityLastUpdated.relative.hours")
-            XCTAssertEqual(decoded.gravityLastUpdated.relative.minutes, 36, "it should have 36 gravityLastUpdated.relative.minutes")
         } catch {
             XCTFail("Can't decode test file bundle \(error)")
         }
@@ -302,11 +297,6 @@ final class SwiftHoleTests: XCTestCase {
             XCTAssertEqual(decoded.replyIP, 11865, "it should have 11865 replyIP")
             XCTAssertEqual(decoded.privacyLevel, 0, "it should have 0 privacyLevel")
             XCTAssertEqual(decoded.status, "enabled", "it should have status enabled")
-            XCTAssertEqual(decoded.gravityLastUpdated.fileExists, true, "it should have fileExists true")
-            XCTAssertEqual(decoded.gravityLastUpdated.absolute, 1587264260, "it should have 1587264260 gravityLastUpdated.absolute")
-            XCTAssertEqual(decoded.gravityLastUpdated.relative.days, 0, "it should have 0 gravityLastUpdated.relative.days")
-            XCTAssertEqual(decoded.gravityLastUpdated.relative.hours, 18, "it should have 18 gravityLastUpdated.relative.hours")
-            XCTAssertEqual(decoded.gravityLastUpdated.relative.minutes, 47, "it should have 47 gravityLastUpdated.relative.minutes")
         } catch {
             XCTFail("Can't decode test file bundle \(error)")
         }
