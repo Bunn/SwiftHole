@@ -14,8 +14,7 @@ public struct Summary: Decodable {
     public let uniqueClients, dnsQueriesAllTypes, replyNODATA, replyNXDOMAIN: Int
     public let replyCNAME, replyIP, privacyLevel: Int
     public let status: String
-    public let gravityLastUpdated: GravityLastUpdated
-    
+
     public var isEnabled: Bool {
         return status.lowercased() == "enabled"
     }
@@ -37,21 +36,6 @@ public struct Summary: Decodable {
         case replyIP = "reply_IP"
         case privacyLevel = "privacy_level"
         case status
-        case gravityLastUpdated = "gravity_last_updated"
-    }
-}
-
-
-// MARK: - GravityLastUpdated
-
-public struct GravityLastUpdated: Decodable {
-    public let fileExists: Bool
-    public let absolute: Int
-    public let relative: Relative
-
-    enum CodingKeys: String, CodingKey {
-        case fileExists = "file_exists"
-        case absolute, relative
     }
 }
 
@@ -96,15 +80,10 @@ public struct Relative: Decodable {
 
 extension Summary: Mockable {
     public static func mockData() -> Summary {
-        Summary(domainsBeingBlocked: 100, dnsQueriesToday: 2, adsBlockedToday: 3, adsPercentageToday: 4, uniqueDomains: 5, queriesForwarded: 6, queriesCached: 7, clientsEverSeen: 8, uniqueClients: 9, dnsQueriesAllTypes: 10, replyNODATA: 11, replyNXDOMAIN: 12, replyCNAME: 13, replyIP: 14, privacyLevel: 15, status: "enabled", gravityLastUpdated: GravityLastUpdated.mockData())
+        Summary(domainsBeingBlocked: 100, dnsQueriesToday: 2, adsBlockedToday: 3, adsPercentageToday: 4, uniqueDomains: 5, queriesForwarded: 6, queriesCached: 7, clientsEverSeen: 8, uniqueClients: 9, dnsQueriesAllTypes: 10, replyNODATA: 11, replyNXDOMAIN: 12, replyCNAME: 13, replyIP: 14, privacyLevel: 15, status: "enabled")
     }
 }
 
-extension GravityLastUpdated: Mockable {
-    public static func mockData() -> GravityLastUpdated {
-        GravityLastUpdated(fileExists: true, absolute: 1, relative: Relative.mockData())
-    }
-}
 
 extension Relative: Mockable {
     public static func mockData() -> Relative {
